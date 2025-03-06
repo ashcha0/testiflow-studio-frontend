@@ -36,7 +36,13 @@
                 <div class="outline-items">
                   <div v-for="(section, index) in outline.sections" :key="index" class="outline-item">
                     <h4>{{ index + 1 }}. {{ section.title }}</h4>
-                    <p v-if="section.content">{{ section.content }}</p>
+                    <el-input
+                      v-model="section.content"
+                      type="textarea"
+                      :rows="3"
+                      placeholder="请输入章节内容"
+                      resize="none"
+                    ></el-input>
                   </div>
                 </div>
                 <div class="outline-actions">
