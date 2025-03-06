@@ -14,6 +14,18 @@ const router = createRouter({
       name: 'history',
       component: () => import('../views/HistoryView.vue'),
       meta: { title: '生成历史' }
+    },
+    {
+      path: '/outline',
+      name: 'outline',
+      component: () => import('../views/OutlineView.vue'),
+      meta: { title: '视频提纲生成' }
+    },
+    {
+      path: '/script/:id',
+      name: 'script-edit',
+      component: () => import('../views/ScriptEditView.vue'),
+      meta: { title: '脚本编辑' }
     }
   ]
 })
