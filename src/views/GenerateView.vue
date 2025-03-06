@@ -12,9 +12,9 @@
 </template>
 
 <script setup lang="ts">
-import ScriptEditor from '@/components/ScriptEditor/index.vue'
-import VideoPreview from '@/components/VideoPreview/index.vue'
-import { useVideoStore } from '@/stores/useVideoStore'
+import ScriptEditor from '../components/ScriptEditor/index.vue'
+import VideoPreview from '../components/VideoPreview/index.vue'
+import { useVideoStore } from '../stores/useVideoStore'
 
 const videoStore = useVideoStore()
 </script>

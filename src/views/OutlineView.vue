@@ -57,7 +57,7 @@
 import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
-import { outlineApi } from '@/api/outlineApi'
+import { outlineApi } from '../api/outlineApi'
 
 const router = useRouter()
 

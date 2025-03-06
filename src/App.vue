@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
-import Layout from '@/components/Layout/index.vue';
+import Layout from './components/Layout/index.vue';
 // App根组件
 </script>
 

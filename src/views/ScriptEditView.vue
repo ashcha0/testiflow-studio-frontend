@@ -6,48 +6,47 @@
       <el-button type="success" @click="generateVideo">生成视频</el-button>
     </div>
     <el-row :gutter="20">
-          <el-col :span="12">
-            <div class="outline-section">
-              <h2>提纲内容</h2>
-              <div v-if="isLoading" class="loading-placeholder">
-                <el-skeleton :rows="10" animated />
-              </div>
-              <div v-else-if="outline" class="outline-content">
-                <h3>{{ outline.title }}</h3>
-                <el-divider></el-divider>
-                <div class="outline-items">
-                  <div v-for="(section, index) in outline.sections" :key="index" class="outline-item">
-                    <h4>{{ index + 1 }}. {{ section.title }}</h4>
-                    <p v-if="section.content">{{ section.content }}</p>
-                  </div>
-                </div>
-              </div>
-              <div v-else class="empty-outline">
-                <el-empty description="无法加载提纲内容" />
-              </div>
+        <el-col :span="12">
+          <div class="outline-section">
+            <h2>提纲内容</h2>
+            <div v-if="isLoading" class="loading-placeholder">
+              <el-skeleton :rows="10" animated />
             </div>
-          </el-col>
-          <el-col :span="12">
-            <div class="script-section">
-              <h2>脚本内容</h2>
-              <div v-if="isLoading" class="loading-placeholder">
-                <el-skeleton :rows="15" animated />
-              </div>
-              <div v-else class="script-content">
-                <el-input
-                  v-model="scriptContent"
-                  type="textarea"
-                  :rows="20"
-                  placeholder="脚本内容将在这里显示"
-                  resize="none"
-                ></el-input>
-                <div class="script-actions">
-                  <el-button @click="regenerateScript">重新生成</el-button>
+            <div v-else-if="outline" class="outline-content">
+              <h3>{{ outline.title }}</h3>
+              <el-divider></el-divider>
+              <div class="outline-items">
+                <div v-for="(section, index) in outline.sections" :key="index" class="outline-item">
+                  <h4>{{ index + 1 }}. {{ section.title }}</h4>
+                  <p v-if="section.content">{{ section.content }}</p>
                 </div>
               </div>
             </div>
-          </el-col>
-        </el-row>
+            <div v-else class="empty-outline">
+              <el-empty description="无法加载提纲内容" />
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="script-section">
+            <h2>脚本内容</h2>
+            <div v-if="isLoading" class="loading-placeholder">
+              <el-skeleton :rows="15" animated />
+            </div>
+            <div v-else class="script-content">
+              <el-input
+                v-model="scriptContent"
+                type="textarea"
+                :rows="20"
+                placeholder="脚本内容将在这里显示"
+                resize="none"
+              ></el-input>
+              <div class="script-actions">
+                <el-button @click="regenerateScript">重新生成</el-button>
+              </div>
+            </div>
+          </div>
+        </el-col>
     </el-row>
   </div>
 </template>
@@ -56,9 +55,9 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { outlineApi } from '@/api/outlineApi'
-import { videoApi } from '@/api/videoApi'
-import { useVideoStore } from '@/stores/useVideoStore'
+import { outlineApi } from '../api/outlineApi'
+import { videoApi } from '../api/videoApi'
+import { useVideoStore } from '../stores/useVideoStore'
 
 const route = useRoute()
 const router = useRouter()
