@@ -8,6 +8,11 @@ interface GenerateOutlineParams {
   main_content?: string
 }
 
+export interface OutlineSection {
+  title: string
+  content?: string
+}
+
 export const outlineApi = {
   // 生成提纲
   generateOutline: async (params: GenerateOutlineParams) => {
@@ -20,7 +25,7 @@ export const outlineApi = {
   },
 
   // 保存提纲
-  saveOutline: async (outline: any) => {
+  saveOutline: async (outline: { title: string, outline: OutlineSection[] }) => {
     const response = await axios.post('/api/outline/save', outline, {
       headers: {
         'Authorization': `Bearer ${configStore.apiKey}`
