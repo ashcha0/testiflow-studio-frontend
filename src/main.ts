@@ -12,10 +12,8 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
-app.use(ElementPlus)
-
 app.use(ElementPlus, {
     locale: zhCn, // 显式设置中文
-});
+})
 
 app.mount('#app')
