@@ -19,6 +19,16 @@ export const outlineApi = {
     return response.data
   },
 
+  // 保存提纲
+  saveOutline: async (outline: any) => {
+    const response = await axios.post('/api/outline/save', outline, {
+      headers: {
+        'Authorization': `Bearer ${configStore.apiKey}`
+      }
+    })
+    return response.data
+  },
+
   // 生成脚本
   generateScript: async (outlineId: string, options?: any) => {
     const response = await axios.post(`/api/generate/script/${outlineId}`, options, {
