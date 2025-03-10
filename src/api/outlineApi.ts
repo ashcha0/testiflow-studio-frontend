@@ -62,5 +62,15 @@ export const outlineApi = {
       }
     })
     return response.data
+  },
+
+  // 生成章节内容
+  generateSectionContent: async (sectionTitle: string) => {
+    const response = await axios.post('/api/generate/section', { title: sectionTitle }, {
+      headers: {
+        'Authorization': `Bearer ${configStore.apiKey}`
+      }
+    })
+    return response.data
   }
 }

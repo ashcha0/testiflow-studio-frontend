@@ -53,6 +53,11 @@
                       placeholder="请输入章节内容"
                       resize="none"
                     ></el-input>
+                    <div class="outline-item-actions" style="margin-top: 5px;">
+                      <el-button type="primary" size="small" @click="generateSectionContent(index)" :loading="generatingSectionIndex === index">
+                        生成正文
+                      </el-button>
+                    </div>
                   </div>
                 </div>
                 <div class="outline-add-section">
@@ -117,6 +122,40 @@ const isGenerating = ref(false)
 const dialogVisible = ref(false)
 const editingSectionTitle = ref('')
 const editingSectionIndex = ref(-1)
+
+// 生成章节内容相关
+const generatingSectionIndex = ref(-1)
+
+// 生成章节内容
+const generateSectionContent = async (index: number) => {
+  if (!outline.value || !outline.value.sections[index]) {
+    ElMessage.warning('章节信息不存在')
+    return
+  }
+  
+  const section = outline.value.sections[index]
+  if (!section.title) {
+    ElMessage.warning('章节标题不能为空')
+    return
+  }
+  
+  try {
+    generatingSectionIndex.value = index
+    const response = await outlineApi.generateSectionContent(section.title)
+    
+    if (response && response.content) {
+      outline.value.sections[index].content = response.content
+      ElMessage.success('章节内容生成成功')
+    } else {
+      ElMessage.warning('生成内容为空，请重试')
+    }
+  } catch (error: any) {
+    ElMessage.error(`生成章节内容失败: ${error.message || '未知错误'}`)
+    console.error('生成章节内容错误:', error)
+  } finally {
+    generatingSectionIndex.value = -1
+  }
+}
 
 // 生成提纲
 const generateOutline = async () => {
