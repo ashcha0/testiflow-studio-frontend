@@ -24,5 +24,27 @@ export const dataApi = {
             }
         })
         return response.data
+    },
+    getDataById: async (id: string) => {
+        try {
+            const response = await axios.get(`/api/outline/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${configStore.apiKey}`
+                }
+            })
+            return {
+                title: response.data.title,
+                outline: response.data.outline,
+                createdAt: response.data.created_at
+            }
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 500) {
+                    throw new Error('服务器内部错误，请稍后再试')
+                }
+                throw error
+            }
+            throw error
+        }
     }
 }
