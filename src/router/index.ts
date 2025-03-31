@@ -26,6 +26,12 @@ const router = createRouter({
       name: 'script-edit',
       component: () => import('../views/ScriptEditView.vue'),
       meta: { title: '脚本编辑' }
+    },
+    {
+      path: '/data',
+      name: 'data',
+      component: () => import('../views/DataView.vue'),
+      meta: { title: '数据展示' }
     }
   ]
 })

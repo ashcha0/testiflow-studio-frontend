@@ -38,7 +38,8 @@ export const outlineApi = {
   generateScript: async (outlineId: string, options?: any) => {
     const response = await axios.post(`/api/generate/script/${outlineId}`, options, {
       headers: {
-        'Authorization': `Bearer ${configStore.apiKey}`
+        'Authorization': `Bearer ${configStore.apiKey}`,
+        'Content-Type': 'application/json'
       }
     })
     return response.data
