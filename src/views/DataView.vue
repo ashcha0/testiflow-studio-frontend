@@ -17,16 +17,30 @@
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
             :page-sizes="[10, 20, 50, 100]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
             :total="total" />
+
+        <!-- 提纲详情对话框 -->
+        <el-dialog v-model="dialogVisible" title="提纲详情" width="60%" destroy-on-close>
+            <OutlinePreview :outline="currentOutline" :isGenerating="false"
+                :generatingSectionIndex="generatingSectionIndex" v-if="currentOutline"
+                @generateSectionContent="generateSectionContent" @generateScript="generateScript"
+                @saveOutline="saveOutline" @addSection="addSection" @deleteSection="deleteSection"
+                @updateSectionTitle="updateSectionTitle" />
+        </el-dialog>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { dataApi } from '../api/dataApi'
+import { outlineApi } from '../api/outlineApi'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import OutlinePreview from '../components/OutlinePreview/index.vue'
 
 export default defineComponent({
     name: 'DataView',
+    components: {
+        OutlinePreview
+    },
     setup() {
         const tableData = ref([])
         const currentPage = ref(1)
@@ -58,27 +72,30 @@ export default defineComponent({
 
         fetchData()
 
+        // 对话框显示状态
+        const dialogVisible = ref(false)
+        // 当前查看的提纲数据
+        const currentOutline = ref(null)
+
+        // 生成章节内容相关
+        const generatingSectionIndex = ref(-1)
+
         const handleViewDetail = async (row: any) => {
             try {
                 const detail = await dataApi.getDataById(row.id)
-                ElMessageBox.alert(
-                    `<div>
-                            <h3>${detail.title}</h3>
-                            <p>创建时间: ${detail.createdAt}</p>
-                            <ul>
-                                ${detail.outline.map((item: any) =>
-                        `<li>
-                                        <strong>${item.title}</strong>
-                                        <p>${item.content}</p>
-                                    </li>`
-                    ).join('')}
-                            </ul>
-                        </div>`,
-                    '提纲详情',
-                    {
-                        dangerouslyUseHTMLString: true
-                    }
-                )
+
+                // 将API返回的数据转换为OutlinePreview组件所需的格式
+                currentOutline.value = {
+                    id: row.id,
+                    title: detail.title,
+                    sections: detail.outline.map((item: any) => ({
+                        title: item.title,
+                        content: item.content
+                    }))
+                }
+
+                // 显示对话框
+                dialogVisible.value = true
             } catch (error) {
                 if (error.response && error.response.status === 404) {
                     ElMessage.error('请求的资源不存在')
@@ -89,14 +106,121 @@ export default defineComponent({
             }
         }
 
+        // 生成章节内容
+        const generateSectionContent = async (index: number) => {
+            if (!currentOutline.value || !currentOutline.value.sections[index]) {
+                ElMessage.warning('章节信息不存在')
+                return
+            }
+
+            const section = currentOutline.value.sections[index]
+            if (!section.title) {
+                ElMessage.warning('章节标题不能为空')
+                return
+            }
+
+            try {
+                generatingSectionIndex.value = index
+                // 这里可以调用API生成内容，暂时使用模拟数据
+                setTimeout(() => {
+                    if (currentOutline.value) {
+                        currentOutline.value.sections[index].content = `这是为章节 "${section.title}" 自动生成的内容。`
+                        ElMessage.success('章节内容生成成功')
+                    }
+                }, 1000)
+            } catch (error: any) {
+                ElMessage.error(`生成章节内容失败: ${error.message || '未知错误'}`)
+                console.error('生成章节内容错误:', error)
+            } finally {
+                setTimeout(() => {
+                    generatingSectionIndex.value = -1
+                }, 1000)
+            }
+        }
+
+        // 生成脚本
+        const generateScript = async () => {
+            if (!currentOutline.value?.id) {
+                ElMessage.warning('无法生成脚本')
+                return
+            }
+
+            ElMessage.info('此功能在查看模式下不可用')
+        }
+
+        // 保存提纲
+        const saveOutline = async () => {
+            if (!currentOutline.value) {
+                ElMessage.warning('没有可保存的提纲')
+                return
+            }
+
+            try {
+                // 调用API保存提纲到数据库
+                const outlineData = {
+                    id: currentOutline.value.id, // 添加ID字段，用于后端判断是更新还是创建
+                    title: currentOutline.value.title,
+                    outline: currentOutline.value.sections.map(section => ({
+                        title: section.title,
+                        content: section.content || ''
+                    }))
+                }
+
+                // 使用outlineApi保存提纲数据
+                await outlineApi.saveOutline(outlineData)
+
+                ElMessage.success('提纲已保存')
+                // 关闭对话框
+                dialogVisible.value = false
+                // 刷新数据列表
+                fetchData()
+            } catch (error: any) {
+                ElMessage.error(`保存提纲失败: ${error.message || '未知错误'}`)
+                console.error('保存提纲错误:', error)
+            }
+        }
+
+        // 添加新章节
+        const addSection = () => {
+            if (!currentOutline.value) return
+
+            currentOutline.value.sections.push({
+                title: `新章节 ${currentOutline.value.sections.length + 1}`,
+                content: ''
+            })
+        }
+
+        // 更新章节标题
+        const updateSectionTitle = (index: number, title: string) => {
+            if (!currentOutline.value) return
+
+            currentOutline.value.sections[index].title = title
+        }
+
+        // 删除章节
+        const deleteSection = (index: number) => {
+            if (!currentOutline.value) return
+
+            currentOutline.value.sections.splice(index, 1)
+        }
+
         return {
             tableData,
             currentPage,
             pageSize,
             total,
+            dialogVisible,
+            currentOutline,
+            generatingSectionIndex,
             handleSizeChange,
             handleCurrentChange,
             handleViewDetail,
+            generateSectionContent,
+            generateScript,
+            saveOutline,
+            addSection,
+            updateSectionTitle,
+            deleteSection
         }
     }
 })

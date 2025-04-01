@@ -25,7 +25,7 @@ export const outlineApi = {
   },
 
   // 保存提纲
-  saveOutline: async (outline: { title: string, outline: OutlineSection[] }) => {
+  saveOutline: async (outline: { id?: string, title: string, outline: OutlineSection[] }) => {
     const response = await axios.post('/api/outline/save', outline, {
       headers: {
         'Authorization': `Bearer ${configStore.apiKey}`
