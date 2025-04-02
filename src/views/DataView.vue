@@ -121,20 +121,20 @@ export default defineComponent({
 
             try {
                 generatingSectionIndex.value = index
-                // 这里可以调用API生成内容，暂时使用模拟数据
-                setTimeout(() => {
-                    if (currentOutline.value) {
-                        currentOutline.value.sections[index].content = `这是为章节 "${section.title}" 自动生成的内容。`
-                        ElMessage.success('章节内容生成成功')
-                    }
-                }, 1000)
+                const response = await outlineApi.generateSectionContent(section.title)
+
+                if (response && response.content) {
+                    currentOutline.value.sections[index].content = response.content
+                    ElMessage.success('章节内容生成成功')
+                } else {
+                    ElMessage.warning('生成内容为空，请重试')
+                }
             } catch (error: any) {
                 ElMessage.error(`生成章节内容失败: ${error.message || '未知错误'}`)
                 console.error('生成章节内容错误:', error)
+
             } finally {
-                setTimeout(() => {
-                    generatingSectionIndex.value = -1
-                }, 1000)
+                generatingSectionIndex.value = -1
             }
         }
 
