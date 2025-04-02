@@ -35,6 +35,7 @@ import { dataApi } from '../api/dataApi'
 import { outlineApi } from '../api/outlineApi'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import OutlinePreview from '../components/OutlinePreview/index.vue'
+import router from '../router'
 
 export default defineComponent({
     name: 'DataView',
@@ -141,11 +142,22 @@ export default defineComponent({
         // 生成脚本
         const generateScript = async () => {
             if (!currentOutline.value?.id) {
-                ElMessage.warning('无法生成脚本')
+                ElMessage.warning('请先生成提纲')
                 return
             }
 
-            ElMessage.info('此功能在查看模式下不可用')
+            try {
+                const response = await outlineApi.generateScript(currentOutline.value.id)
+                ElMessage.success('脚本生成成功')
+                // 跳转到脚本编辑页面
+                router.push({
+                    name: 'script-edit',
+                    params: { id: response.id }
+                })
+            } catch (error: any) {
+                ElMessage.error(`脚本生成失败: ${error.message || '未知错误'}`)
+                console.error('生成脚本错误:', error)
+            }
         }
 
         // 保存提纲

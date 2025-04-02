@@ -35,8 +35,24 @@ export const outlineApi = {
   },
 
   // 生成脚本
-  generateScript: async (outlineId: string, options?: any) => {
-    const response = await axios.post(`/api/generate/script/${outlineId}`, options, {
+  generateScript: async (outlineId: string, options: any = {}) => {
+    // 确保options是一个有效的对象，并包含必要的字段
+    const requestBody = {
+      // 先设置基本字段
+      outline_id: outlineId,
+      // 从options中提取特定字段，如果不存在则使用默认值
+      sections: options.sections || [],
+      title: options.title || '',
+      raw_content: options.raw_content || ''
+    };
+
+    // 删除已处理的特定字段，避免重复
+    const { sections, title, raw_content, ...restOptions } = options;
+
+    // 合并其他选项
+    Object.assign(requestBody, restOptions);
+
+    const response = await axios.post(`/api/generate/script/${outlineId}`, requestBody, {
       headers: {
         'Authorization': `Bearer ${configStore.apiKey}`,
         'Content-Type': 'application/json'
