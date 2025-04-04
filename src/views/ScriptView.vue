@@ -4,6 +4,7 @@
         <el-table :data="tableData" style="width: 100%">
             <el-table-column prop="id" label="ID" width="180" />
             <el-table-column prop="outline_id" label="ID" width="180" />
+            //todo:outline的标题没有存储在数据库的scripts表单中，需要修改数据库结构
             <el-table-column prop="title" label="标题" width="180" />
             <el-table-column prop="created_at" label="创建时间" width="180" />
             <el-table-column prop="updated_at" label="更新时间" width="180" />
