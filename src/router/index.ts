@@ -32,6 +32,12 @@ const router = createRouter({
       name: 'data',
       component: () => import('../views/DataView.vue'),
       meta: { title: '数据展示' }
+    },
+    {
+      path: '/scripts',
+      name: 'scripts',
+      component: () => import('../views/ScriptView.vue'),
+      meta: { title: '脚本管理' }
     }
   ]
 })

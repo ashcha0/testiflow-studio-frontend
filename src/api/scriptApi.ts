@@ -17,6 +17,11 @@ interface ScriptTemplate {
   content: string
 }
 
+interface GetScriptListParams {
+  page: number
+  size: number
+}
+
 export const scriptApi = {
   // 生成文案
   generateScript: async (params: GenerateScriptParams) => {
@@ -59,5 +64,42 @@ export const scriptApi = {
       }
     })
     return response.data
+  },
+
+  // 获取脚本列表
+  getScriptList: async (params: GetScriptListParams) => {
+    const response = await axios.get('/api/script/list', {
+      params,
+      headers: {
+        'Authorization': `Bearer ${configStore.apiKey}`
+      }
+    })
+    return response.data
+  },
+
+  // 根据ID获取脚本详情
+  getScriptById: async (id: string) => {
+    try {
+      const response = await axios.get(`/api/script/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${configStore.apiKey}`
+        }
+      })
+      return {
+        outline_id: response.data.outline_id,
+        title: response.data.title,
+        content: response.data.content,
+        created_at: response.data.created_at,
+        updated_at: response.data.updated_at
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 500) {
+          throw new Error('服务器内部错误，请稍后再试')
+        }
+        throw error
+      }
+      throw error
+    }
   }
 }

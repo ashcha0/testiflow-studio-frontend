@@ -126,6 +126,14 @@ const generateScript = async () => {
 
   try {
     const response = await outlineApi.generateScript(outline.value.id)
+    
+    // 检查响应数据是否包含必要的字段
+    if (!response || !response.id) {
+      console.error('生成脚本响应数据异常:', response)
+      ElMessage.error('脚本生成失败: 响应数据格式不正确')
+      return
+    }
+    
     ElMessage.success('脚本生成成功')
     // 跳转到脚本编辑页面
     router.push({

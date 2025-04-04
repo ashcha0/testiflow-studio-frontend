@@ -31,6 +31,12 @@
             </el-icon>
             <span>数据展示</span>
           </el-menu-item>
+          <el-menu-item index="/scripts">
+            <el-icon>
+              <Files />
+            </el-icon>
+            <span>脚本管理</span>
+          </el-menu-item>
         </el-menu>
       </el-aside>
       <el-container class="layout-content">
@@ -53,7 +59,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { Document, List, VideoPlay } from '@element-plus/icons-vue'
+import { Document, List, VideoPlay, Files, DataLine } from '@element-plus/icons-vue'
 
 const route = useRoute()
 
