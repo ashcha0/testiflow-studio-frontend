@@ -100,11 +100,19 @@ export default defineComponent({
                     throw new Error('获取脚本数据失败')
                 }
                 
+                // 处理content字段，确保空数组或"[]"字符串被视为空内容
+                let content = detail.content;
+                if (Array.isArray(content) && content.length === 0) {
+                    content = '';
+                } else if (content === '[]') {
+                    content = '';
+                }
+                
                 // 确保数据字段存在，如果不存在则提供默认值
                 currentScript.value = {
                     id: detail.outline_id || row.id,
                     title: detail.title || '无标题',
-                    content: detail.content || '暂无内容',
+                    content: content || '暂无内容',
                     created_at: detail.created_at || row.created_at || '',
                     updated_at: detail.updated_at || row.updated_at || ''
                 }
