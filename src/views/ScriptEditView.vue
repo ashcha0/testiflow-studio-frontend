@@ -4,6 +4,7 @@
       <el-button @click="goBack">返回</el-button>
       <el-button type="primary" @click="saveScript">保存脚本</el-button>
       <el-button type="success" @click="generateVideo">生成视频</el-button>
+      //TODO:outline的标题没有存储在数据库的scripts表单中，需要修改数据库结构
     </div>
     <el-row :gutter="20">
         <el-col :span="12">
@@ -162,6 +163,7 @@ onMounted(async () => {
       
       try {
         const scriptResponse = await scriptApi.getScriptById(scriptId.value)
+        //TODO:getScriptById无法正确返回数据
         console.log('脚本内容API响应:', scriptResponse)
         
         // 尝试从响应中提取script数据
