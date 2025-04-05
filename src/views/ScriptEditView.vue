@@ -162,12 +162,19 @@ onMounted(async () => {
       let scriptData = null;
       
       try {
-        const scriptResponse = await scriptApi.getScriptById(scriptId.value)
-        //TODO:getScriptById无法正确返回数据
-        console.log('脚本内容API响应:', scriptResponse)
-        
-        // 尝试从响应中提取script数据
-        scriptData = scriptResponse
+        // 首先尝试通过outline_id获取脚本内容
+        try {
+          const scriptResponse = await scriptApi.getScriptByOutlineId(scriptId.value)
+          console.log('通过outline_id获取脚本内容成功:', scriptResponse)
+          scriptData = scriptResponse
+        } catch (outlineError) {
+          console.warn('通过outline_id获取脚本失败，尝试直接获取脚本:', outlineError)
+          // 如果通过outline_id获取失败，尝试直接通过id获取
+          // 直接通过ID获取脚本，后端会尝试将ID作为script_id或outline_id查询
+          const scriptResponse = await scriptApi.getScriptById(scriptId.value)
+          console.log('脚本内容API响应:', scriptResponse)
+          scriptData = scriptResponse
+        }
         
         // 检查响应结构
         if (!scriptData) {
