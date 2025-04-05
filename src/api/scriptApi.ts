@@ -54,10 +54,11 @@ export const scriptApi = {
   },
 
   // 保存文案
-  saveScript: async (scriptContent: string, title: string) => {
+  saveScript: async (scriptContent: string, title: string, outlineId?: string) => {
     const response = await axios.post('/api/script/save', {
       content: scriptContent,
-      title: title
+      title: title,
+      outline_id: outlineId
     }, {
       headers: {
         'Authorization': `Bearer ${configStore.apiKey}`

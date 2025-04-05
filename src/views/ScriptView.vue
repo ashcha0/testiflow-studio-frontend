@@ -131,7 +131,7 @@ export default defineComponent({
         const handleEdit = (row: any) => {
             router.push({
                 name: 'script-edit',
-                params: { id: row.id }
+                params: { id: row.outline_id }
             })
         }
 
