@@ -133,51 +133,11 @@ export const scriptApi = {
     }
   },
 
-  // 根据提纲ID获取脚本详情
+  // 根据提纲ID获取脚本详情 - 使用通用的getScriptById方法，后端会自动处理ID类型
   getScriptByOutlineId: async (outlineId: string) => {
     try {
-      // 调用后端API获取与提纲关联的脚本
-      const response = await axios.get(`/api/outline/${outlineId}/script`, {
-        headers: {
-          'Authorization': `Bearer ${configStore.apiKey}`
-        }
-      })
-
-      // 处理content字段，确保它是字符串格式
-      let content = response.data.content;
-
-      // 如果content是数组但为空，转换为空字符串
-      if (Array.isArray(content) && content.length === 0) {
-        content = '';
-      }
-      // 如果content是非空数组，将其转换为字符串格式
-      else if (Array.isArray(content)) {
-        // 如果数组中的元素有sections字段，说明是结构化内容
-        if (content[0] && content[0].sections) {
-          const sections = content[0].sections;
-          if (Array.isArray(sections) && sections.length > 0) {
-            content = sections[0].content || '';
-          } else {
-            content = '';
-          }
-        } else {
-          // 尝试将数组转换为字符串
-          content = content.map(item => {
-            if (typeof item === 'object') {
-              return JSON.stringify(item);
-            }
-            return item;
-          }).join('\n');
-        }
-      }
-
-      return {
-        outline_id: outlineId,
-        title: response.data.title,
-        content: content,
-        created_at: response.data.created_at,
-        updated_at: response.data.updated_at
-      }
+      // 直接使用getScriptById方法，后端会尝试将ID作为script_id或outline_id查询
+      return await scriptApi.getScriptById(outlineId)
     } catch (error) {
       console.error('通过提纲ID获取脚本失败:', error)
       throw error
