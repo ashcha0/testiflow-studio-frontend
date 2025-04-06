@@ -73,6 +73,37 @@ Authorization: Bearer {apiKey}
 }
 ```
 
+### 获取数据详情
+
+根据ID获取数据详情（实际获取的是提纲详情）。
+
+- **URL**: `/api/outline/{id}`
+- **方法**: GET
+- **请求参数**:
+
+| 参数名 | 类型 | 必填 | 说明 |
+| ----- | ---- | ---- | ---- |
+| id | string | 是 | 数据ID（URL路径参数） |
+
+- **响应示例**:
+
+```json
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "title": "提纲标题",
+    "outline": [
+      {
+        "title": "章节1标题",
+        "content": "章节1内容描述"
+      }
+    ],
+    "created_at": "2023-01-01T12:00:00Z"
+  }
+}
+```
+
 ## 提纲生成模块
 
 ### 生成提纲
@@ -165,7 +196,10 @@ Authorization: Bearer {apiKey}
 | 参数名 | 类型 | 必填 | 说明 |
 | ----- | ---- | ---- | ---- |
 | outlineId | string | 是 | 提纲ID（URL路径参数） |
-| options | object | 否 | 脚本生成选项 |
+| sections | array | 否 | 章节内容数组 |
+| title | string | 否 | 标题 |
+| raw_content | string | 否 | 原始内容 |
+| options | object | 否 | 其他脚本生成选项 |
 
 - **响应示例**:
 
@@ -322,7 +356,35 @@ Authorization: Bearer {apiKey}
   "code": 200,
   "message": "success",
   "data": {
-    "id": "script_001",
+    "outline_id": "outline_123",
+    "title": "产品介绍视频脚本",
+    "content": "开场白：大家好，欢迎来到我们的产品介绍...\n第一部分：产品功能概述...\n第二部分：核心优势...",
+    "created_at": "2023-06-01T10:00:00Z",
+    "updated_at": "2023-06-02T15:30:00Z"
+  }
+}
+```
+
+### 根据提纲ID获取脚本
+
+根据提纲ID获取关联的脚本详情。
+
+- **URL**: `/api/script/{outlineId}`
+- **方法**: GET
+- **请求参数**:
+
+| 参数名 | 类型 | 必填 | 说明 |
+| ----- | ---- | ---- | ---- |
+| outlineId | string | 是 | 提纲ID（URL路径参数） |
+
+- **响应示例**:
+
+```json
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "outline_id": "outline_123",
     "title": "产品介绍视频脚本",
     "content": "开场白：大家好，欢迎来到我们的产品介绍...\n第一部分：产品功能概述...\n第二部分：核心优势...",
     "created_at": "2023-06-01T10:00:00Z",
@@ -460,6 +522,7 @@ Authorization: Bearer {apiKey}
 | ----- | ---- | ---- | ---- |
 | content | string | 是 | 文案内容 |
 | title | string | 是 | 文案标题 |
+| outline_id | string | 否 | 关联的提纲ID |
 
 - **响应示例**:
 
