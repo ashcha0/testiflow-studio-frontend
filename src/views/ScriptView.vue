@@ -118,8 +118,8 @@ export default defineComponent({
                     updated_at: detail.updated_at || row.updated_at || ''
                 }
                 dialogVisible.value = true
-            } catch (error) {
-                if (error.response && error.response.status === 404) {
+            } catch (error: unknown) {
+                if ((error as any)?.response && (error as any).response.status === 404) {
                     ElMessage.error('请求的资源不存在')
                 } else {
                     ElMessage.error('获取详情失败')

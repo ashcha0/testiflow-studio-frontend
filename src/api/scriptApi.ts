@@ -122,7 +122,7 @@ export const scriptApi = {
         created_at: response.data.created_at,
         updated_at: response.data.updated_at
       }
-    } catch (error) {
+    } catch (error: any) {
       if (error.response) {
         if (error.response.status === 500) {
           throw new Error('服务器内部错误，请稍后再试')

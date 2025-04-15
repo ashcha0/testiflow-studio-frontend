@@ -151,9 +151,9 @@ onMounted(async () => {
       }
       
       console.log('最终提取的outline数据:', outline.value)
-    } catch (outlineError) {
+    } catch (outlineError: unknown) {
       console.error('获取提纲详情错误:', outlineError)
-      ElMessage.error(`获取提纲失败: ${outlineError.message || '未知错误'}`)
+      ElMessage.error(`获取提纲失败: ${(outlineError as any)?.message || '未知错误'}`)
     }
     
     // 获取脚本内容
@@ -173,9 +173,9 @@ onMounted(async () => {
         }
         
         // 检查是否有data包装
-        if (scriptData.data && typeof scriptData.data === 'object') {
+        if ((scriptData as any).data && typeof (scriptData as any).data === 'object') {
           console.log('从data字段提取脚本数据')
-          scriptData = scriptData.data
+          scriptData = (scriptData as any).data
         }
         
         // 处理content字段
@@ -203,7 +203,7 @@ onMounted(async () => {
                 }
               } else {
                 // 将对象数组转换为字符串
-                scriptContent.value = scriptData.content.map(item => 
+                scriptContent.value = scriptData.content.map((item: any) => 
                   typeof item === 'object' ? JSON.stringify(item) : String(item)
                 ).join('\n')
               }
@@ -234,13 +234,13 @@ onMounted(async () => {
         ElMessage.info('这是一个新脚本，请编写内容后保存')
         // 不抛出异常，允许用户创建新脚本
       }
-    } catch (scriptError) {
+    } catch (scriptError: unknown) {
       console.error('获取脚本内容错误:', scriptError)
       scriptContent.value = ''
-      ElMessage.error(`获取脚本内容失败: ${scriptError.message || '未知错误'}`)
+      ElMessage.error(`获取脚本内容失败: ${(scriptError as any)?.message || '未知错误'}`)
     }
-  } catch (error) {
-    ElMessage.error(`加载失败: ${error.message || '未知错误'}`)
+  } catch (error: unknown) {
+    ElMessage.error(`加载失败: ${(error as any)?.message || '未知错误'}`)
     console.error('加载脚本错误:', error)
   } finally {
     isLoading.value = false
@@ -323,7 +323,7 @@ const regenerateScript = async () => {
     
     // 如果有提纲章节，添加到选项中
     if (outline.value?.sections && outline.value.sections.length > 0) {
-      options.sections = outline.value.sections
+      (options as any).sections = outline.value.sections
     }
     
     const response = await outlineApi.generateScript(outlineId, options)

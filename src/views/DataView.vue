@@ -76,7 +76,11 @@ export default defineComponent({
         // 对话框显示状态
         const dialogVisible = ref(false)
         // 当前查看的提纲数据
-        const currentOutline = ref(null)
+        const currentOutline = ref<{
+            id: string;
+            title: string;
+            sections: Array<{title: string; content: string}>;
+        } | null>(null)
 
         // 生成章节内容相关
         const generatingSectionIndex = ref(-1)
@@ -97,8 +101,8 @@ export default defineComponent({
 
                 // 显示对话框
                 dialogVisible.value = true
-            } catch (error) {
-                if (error.response && error.response.status === 404) {
+            } catch (error: unknown) {
+                if ((error as any)?.response && (error as any).response.status === 404) {
                     ElMessage.error('请求的资源不存在')
                 } else {
                     ElMessage.error('获取详情失败')
